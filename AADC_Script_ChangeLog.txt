@@ -1,0 +1,7 @@
+#Original Script created April, 2021 by Alexander Kast
+#Created by Alexander Kast
+#akast@cloud-design.de
+#
+
+#Version 2.3 08-Mai-2021 (Alexander Kast)
+# Added TOP100 Mailboxes to the script

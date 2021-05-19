@@ -64,7 +64,8 @@ The PowerShell script does not gather information on public folders or analyzes 
 * 2.2 : Bug fixes and enhancements
   * CCS fixes for Html header tags (issue #5)
   * New script parameter _ShowDriveNames_ added to optionally show drive names for EDB/LOG file paths in database table (issue #4)
-  * Exchange organization name added to report header  
+  * Exchange organization name added to report header
+* 2.3 : Added Top10 Mailboxes and add some CSS styles 
 
 ## Example Report
 

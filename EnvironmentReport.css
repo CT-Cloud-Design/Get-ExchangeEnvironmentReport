@@ -5,7 +5,7 @@ body {
 h1 {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 16px;
-    font-weight
+    font-weight : bold;
     }
 h2 { 
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
@@ -39,7 +39,7 @@ table th.header {
 table.overview {
   font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
   font-size: 11px;
-  font-weicht: bold;
+  font-weight: bold;
   padding: 3px;
   border: 0px;
   width: 100%
@@ -100,7 +100,7 @@ table.dagsummary {
   width: 100%;
   font-size:8pt;
   font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-  align: center;
+  box-align: center;
 }
 table tr.dagsummary {
   text-align: center;
@@ -134,4 +134,27 @@ table tr.databases {
 
 .alert {
   color: red;
+}
+
+table.top100 {
+  border: 0px;
+  padding: 3px;
+  width: 50%;
+  font-size:8pt;
+  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+  box-align: left;
+}
+table tr.top100 {
+  text-align: left;
+  background: #00e1ff;
+}
+table tr.top100 {
+  text-align: left;
+  background: #00e1ff;
+}
+table th.top100 {
+  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+  text-align: center;
+  background: #00e1ff;
+  color: #ffffff;  
 }

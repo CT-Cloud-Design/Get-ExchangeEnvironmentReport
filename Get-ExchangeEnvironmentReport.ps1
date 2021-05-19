@@ -120,7 +120,7 @@ param(
 
 # Warning Limits, adjust as needed
 $MinFreeDiskspace = 10 # Mark free space less than this value (%) in red
-$MaxDatabaseSize = 250 # Mark database larger than this value (GB) in red
+$MaxDatabaseSize = 800 # Mark database larger than this value (GB) in red
 
 # Default variables
 $NotAvailable = 'N/A'
@@ -310,7 +310,16 @@ function Get-ExchangeServerMailboxCount {
   $MailboxCount
 	
 }
-
+# Sub-Function to get MailboxStatistics (Top 100)
+function Get-ExchangeServerMailboxStatistics {
+  $Top100  = '<table class="top100">
+  <tbody><tr class="top100"><th class="top100">Top 100 Mailboxes</th></tr></tbody></table>'
+  $Top100tab = Get-Mailbox -ResultSize Unlimited | Get-MailboxStatistics | Sort-Object TotalItemSize -Descending | Select-Object DisplayName,TotalItemSize -First 100 | ConvertTo-Html
+  $Top100tab = $Top100tab.replace("<th>",'<th class="top100">')
+  $Top100 += $Top100tab.replace("<table>",'<table class="top100"')
+  $Top100 
+  
+}
 # Sub-Function to Get Exchange Server information
 function Get-ExchangeServerInformation {
   [CmdletBinding()]
@@ -1264,7 +1273,7 @@ if (Get-Command -Name Get-HybridConfiguration -ErrorAction SilentlyContinue) {
 Show-ProgressBar -PercentComplete 10 -Status 'Getting Mailboxes' -Stage 1
 
 $Mailboxes = [array](Get-Mailbox -ResultSize Unlimited) | Where-Object {$_.ServerName -like $ServerFilter}
-
+$MailboxStatistics100 = Get-ExchangeServerMailboxStatistics
 if ($E2010) { 
 
   Show-ProgressBar -PercentComplete 60 -Status 'Getting Archive Mailboxes' -Stage 1
@@ -1414,10 +1423,9 @@ if ($ExchangeEnvironment.NonDAGDatabases.Count) {
   # Get Table HTML for non-DAG databases
   $Output+=Get-HtmlDatabaseInformationTable -Databases $ExchangeEnvironment.NonDAGDatabases
 }
-
-
-# End
-Show-ProgressBar -PercentComplete 90 -Status 'Finishing off..' -Stage 4
+  $Output += $MailboxStatistics100
+  # End
+Show-ProgressBar -PercentComplete 95 -Status 'Finishing off..' -Stage 4
 
 $Output+='</body></html>'
 
