@@ -320,6 +320,29 @@ function Get-ExchangeServerMailboxStatistics {
   $Top100 
   
 }
+# Sub-Function to get Public Folder Displayname,ItemCount, TotelItemSize
+function Get-ExchangeServerPublicFolderSize {
+  $pubfoldertab = Get-PublicFolderStatistics | Sort-Object TotalItemSize -Descending | Select-Object Name,ItemCount,TotalItemSize,MailboxOwnerID | ConvertTo-Html
+  if ($pubfoldertab -ne $null){
+  $pubfolder  = '<table class="top100">
+  <tbody><tr class="top100"><th class="top100">Public Folder</th></tr></tbody></table>'
+  $pubfoldertab = $pubfoldertab.replace("<th>",'<th class="top100">')
+  $pubfolder += $pubfoldertab.replace("<table>",'<table class="top100"')
+  $pubfolder 
+  }
+}
+# Sub-F to get Public Folder Mailbox Information
+function Get-ExchangeServerPublicFolderMailbox {
+    $pubfoldermbtab = Get-Mailbox -PublicFolder -ResultSize Unlimited | Get-MailboxStatistics | Sort-Object TotalItemSize -Descending | Select-Object DisplayName,TotalItemSize -First 100 | ConvertTo-Html
+  if($pubfoldermbtab -ne $null)
+  {
+  $pubfoldermb  = '<table class="top100">
+  <tbody><tr class="top100"><th class="top100">Public Folder Size</th></tr></tbody></table>'
+  $pubfoldermbtab = $pubfoldermbtab.replace("<th>",'<th class="top100">')
+  $pubfoldermb += $pubfoldermbtab.replace("<table>",'<table class="top100"')
+  $pubfoldermb
+  }
+}
 # Sub-Function to Get Exchange Server information
 function Get-ExchangeServerInformation {
   [CmdletBinding()]
@@ -1273,7 +1296,14 @@ if (Get-Command -Name Get-HybridConfiguration -ErrorAction SilentlyContinue) {
 Show-ProgressBar -PercentComplete 10 -Status 'Getting Mailboxes' -Stage 1
 
 $Mailboxes = [array](Get-Mailbox -ResultSize Unlimited) | Where-Object {$_.ServerName -like $ServerFilter}
+Show-ProgressBar -PercentComplete 12 -Status 'Getting Mailboxes Sizes' -Stage 1
 $MailboxStatistics100 = Get-ExchangeServerMailboxStatistics
+Show-ProgressBar -PercentComplete 14 -Status 'Getting Public Folder Statistics' -Stage 1
+$PublicFolderStatistic = Get-ExchangeServerPublicFolderSize
+Show-ProgressBar -PercentComplete 14 -Status 'Getting Public Folder Statistics' -Stage 1
+$PublicFolderMailbox = Get-ExchangeServerPublicFolderMailbox
+
+
 if ($E2010) { 
 
   Show-ProgressBar -PercentComplete 60 -Status 'Getting Archive Mailboxes' -Stage 1
@@ -1423,7 +1453,13 @@ if ($ExchangeEnvironment.NonDAGDatabases.Count) {
   # Get Table HTML for non-DAG databases
   $Output+=Get-HtmlDatabaseInformationTable -Databases $ExchangeEnvironment.NonDAGDatabases
 }
+  Show-ProgressBar -PercentComplete 90 -Status 'Writing HTML Mailbox Statistics' -Stage 4
   $Output += $MailboxStatistics100
+  Show-ProgressBar -PercentComplete 92 -Status 'Writing HTML PublicFolder Statistics' -Stage 4
+  $Output += $PublicFolderStatistic
+  Show-ProgressBar -PercentComplete 93 -Status 'Writing HTML PublicFolder Statistics' -Stage 4
+  $Output += $PublicFolderMailbox
+
   # End
 Show-ProgressBar -PercentComplete 95 -Status 'Finishing off..' -Stage 4
 
